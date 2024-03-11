@@ -1,0 +1,47 @@
+class Settings { 
+  ansible_host: String
+  ansible_port: Int
+  ansible_python_interpreter: String
+  ansible_connection: String
+}
+
+nhome  { // all level
+  children { // annoyingly, this is required
+    pgrouup { // group level
+      hosts { // host level
+        jtnlap = new Settings { 
+          ansible_host = "127.0.0.1"
+          ansible_port = 22
+          ansible_python_interpreter = "/usr/bin/env python3"
+          ansible_connection = "local"
+        }
+        aanlap = new Settings {
+          ansible_host = "192.168.20.241"
+          ansible_port = 22
+          ansible_python_interpreter = "/usr/bin/env python3"
+          ansible_connection = "ssh"
+        }
+      }
+    }
+    kgroup { // group level
+      hosts { // host level
+        penlap = new Settings {
+          ansible_host = "192.168.20.241"
+          ansible_port = 22
+          ansible_python_interpreter = "/usr/bin/env python3"
+          ansible_connection = "ssh"
+        }
+        aenlap = new Settings {
+          ansible_host = "192.168.20.241"
+          ansible_port = 22
+          ansible_python_interpreter = "/usr/bin/env python3"
+          ansible_connection = "ssh" 
+        }
+      }
+    }
+  }
+}
+
+output { 
+  renderer = new YamlRenderer {}
+}

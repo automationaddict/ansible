@@ -1,0 +1,26 @@
+nhome:
+  children:
+    pgrouup:
+      hosts:
+        jtnlap:
+          ansible_host: 127.0.0.1
+          ansible_port: 22
+          ansible_python_interpreter: /usr/bin/env python3
+          ansible_connection: local
+        aanlap:
+          ansible_host: 192.168.20.241
+          ansible_port: 22
+          ansible_python_interpreter: /usr/bin/env python3
+          ansible_connection: ssh
+    kgroup:
+      hosts:
+        penlap:
+          ansible_host: 192.168.20.241
+          ansible_port: 22
+          ansible_python_interpreter: /usr/bin/env python3
+          ansible_connection: ssh
+        aenlap:
+          ansible_host: 192.168.20.241
+          ansible_port: 22
+          ansible_python_interpreter: /usr/bin/env python3
+          ansible_connection: ssh
