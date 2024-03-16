@@ -1,0 +1,145 @@
+nhome:
+  children:
+    pgroup:
+      hosts:
+        jtnlap:
+          # general ansible connection parameters
+          ansible_connection: local
+          ansible_host: 127.0.0.1
+          ansible_port: 22
+          ansible_user: !vault |
+            $ANSIBLE_VAULT;1.1;AES256
+            61643239343362386131363431313232356137326566363234366362306637356138633638333364
+            6337313935343464323462373730333736656262373132330a626366663532326234643638616639
+            65643365616539346566333631613536383639633131336361363530373035386337666234333235
+            3630633564326235350a353765663630346538313039376665303666636465346564336561613539
+            6264
+          # ansible_password:
+          #
+          # specific to the ssh connection
+          # ansible_ssh_private_key_file:
+          # ansible_ssh_common_args:
+          # ansible_ssh_common_args:
+          # ansible_scp_extra_args:
+          # ansible_ssh_extra_args:
+          # ansible_ssh_pipelining:
+          # ansible_ssh_executable:
+          #
+          # privellege escalation
+          # ansible_become:
+          # ansible_become_method:
+          # ansible_become_user:
+          # ansible_become_password:
+          # ansible_become_exe:
+          # ansible_become_flags:
+          #
+          # remote host environment parameters
+          # ansible_shell_type:
+          ansible_python_interpreter: /usr/bin/env python3
+          # ansible_*_interpreter:
+          # ansible_shell_executable:
+    #     aanlap:
+    #       ansible_connection: ssh
+    #       ansible_host: 192.168.20.241
+    #       ansible_port: 22
+    #       ansible_user: $ANSIBLE_VAULT;1.1;AES256
+    #         65663462316239383737313261643330393539313334303065326335393062643834376235623763
+    #         3338326664396637343932613465323462363237663163380a313430373536316234623966636531
+    #         63643134633737646435393763623437353137363037653035333764653336343536363832613634
+    #         6561363239616163640a656664626266336261323436636666343836353431633666373732663761
+    #         3238
+    #       #
+    #       # specific to the ssh connection
+    #       # ansible_ssh_private_key_file:
+    #       # ansible_ssh_common_args:
+    #       # ansible_ssh_common_args:
+    #       # ansible_scp_extra_args:
+    #       # ansible_ssh_extra_args:
+    #       # ansible_ssh_pipelining:
+    #       # ansible_ssh_executable:
+    #       #
+    #       # privellege escalation
+    #       # ansible_become:
+    #       # ansible_become_method:
+    #       # ansible_become_user:
+    #       # ansible_become_password:
+    #       # ansible_become_exe:
+    #       # ansible_become_flags:
+    #       #
+    #       # remote host environment parameters
+    #       # ansible_shell_type:
+    #       ansible_python_interpreter: /usr/bin/env python3
+    #       # ansible_*_interpreter:
+    #       # ansible_shell_executable:
+    # kgroup:
+    #   hosts:
+    #     penlap:
+    #       ansible_connection: ssh
+    #       ansible_host: 192.168.20.241
+    #       ansible_port: 22
+    #       ansible_user: !vault |
+    #         $ANSIBLE_VAULT;1.1;AES256
+    #         66306132323163373736363637333837653930613532366665303936316135353465373361383230
+    #         3763383965353162346332333334303631303332623231350a626365353835373465306565373132
+    #         31336432633566383163646435663437376338663831303130333737393838313164356333366462
+    #         3939306235323764610a633266663033306535623737633663336331353861323831623734383531
+    #         6262
+    #       # ansible_password:
+    #       #
+    #       # specific to the ssh connection
+    #       # ansible_ssh_private_key_file:
+    #       # ansible_ssh_common_args:
+    #       # ansible_ssh_common_args:
+    #       # ansible_scp_extra_args:
+    #       # ansible_ssh_extra_args:
+    #       # ansible_ssh_pipelining:
+    #       # ansible_ssh_executable:
+    #       #
+    #       # privellege escalation
+    #       # ansible_become:
+    #       # ansible_become_method:
+    #       # ansible_become_user:
+    #       # ansible_become_password:
+    #       # ansible_become_exe:
+    #       # ansible_become_flags:
+    #       #
+    #       # remote host environment parameters
+    #       # ansible_shell_type:
+    #       ansible_python_interpreter: /usr/bin/env python3
+    #       # ansible_*_interpreter:
+    #       # ansible_shell_executable:
+    #     aenlap:
+    #       ansible_connection: ssh
+    #       ansible_host: 192.168.20.241
+    #       ansible_port: 22
+    #       ansible_user: !vault |
+    #         $ANSIBLE_VAULT;1.1;AES256
+    #         64646364376661396231616163336663656435656261633933353732306632303839376466343066
+    #         6462663231636631333263376436396265633037336162650a323062353866353261306138643037
+    #         38383030636230613931316437363531623365363537656634663062623732663433663661316430
+    #         3034623739666435330a303365343032336639393733373365656336613737366339656564306538
+    #         6264
+    #       # ansible_password:
+    #       #
+    #       # specific to the ssh connection
+    #       # ansible_ssh_private_key_file:
+    #       # ansible_ssh_common_args:
+    #       # ansible_ssh_common_args:
+    #       # ansible_scp_extra_args:
+    #       # ansible_ssh_extra_args:
+    #       # ansible_ssh_pipelining:
+    #       # ansible_ssh_executable:
+    #       #
+    #       # privellege escalation
+    #       # ansible_become:
+    #       # ansible_become_method:
+    #       # ansible_become_user:
+    #       # ansible_become_password:
+    #       # ansible_become_exe:
+    #       # ansible_become_flags:
+    #       #
+    #       # remote host environment parameters
+    #       # ansible_shell_type:
+    #       ansible_python_interpreter: /usr/bin/env python3
+    #       # ansible_*_interpreter:
+    #       # ansible_shell_executable:

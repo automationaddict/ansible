@@ -1,0 +1,67 @@
+---
+# pre-run tasks
+- hosts: all
+  tags: base, update
+  pre_tasks:
+    - name: pre-run | ping the remote host
+      tags:
+        - base
+        - update
+      ansible.builtin.ping:
+      remote_user: "{{ ansible_user }}"
+      when: ansible_os_family == 'Debian'
+
+    - name: pre-run | show ansible user
+      tags:
+        - base
+        - update
+      ansible.builtin.debug:
+        msg: "ansible_user: {{ ansible_user }}"
+      when: ansible_os_family == 'Debian'
+
+    - name: pre-run | update package cache (debian)
+      tags:
+        - always
+      become: yes
+      become_method: sudo
+      ansible.builtin.apt:
+        update_cache: yes
+      register: apt_update_result
+      changed_when: apt_update_result.changed
+      when: ansible_os_family == 'Debian'
+
+# run roles
+- hosts: all
+  tags:
+    - base
+    - update
+  become: yes
+  become_method: sudo
+  roles:
+    - ../roles/groups/nhome
+
+# end of run cleanup
+- hosts: all
+  tags:
+    - base
+    - update
+  become: yes
+  tasks:
+    - name: cleanup package cache (debian)
+      tags:
+        - base
+        - update
+      ansible.builtin.apt:
+        autoclean: yes
+      changed_when: apt_update_result.changed
+      when: ansible_os_family == 'Debian'
+
+    - name: autoremove orphan packages (debian based)
+      tags:
+        - base
+        - update
+      ansible.builtin.apt:
+        autoremove: yes
+        purge: yes
+      changed_when: apt_update_result.changed
+      when: ansible_os_family == 'Debian'
