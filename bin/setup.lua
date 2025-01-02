@@ -148,32 +148,38 @@ end
 -- Clone the Ansible repository
 print("Clone a git repository")
 
+local temp_dir = os.getenv("HOME") .. "/ansible.tmp"
 local target_dir = os.getenv("HOME") .. "/ansible"
 
+-- Clone the repository
+if run_command("git clone " .. REPO_URL .. " " .. temp_dir) then
+    create_tmp_dir()
+    print("Repository cloned successfully into " .. temp_dir)
+else
+    print("An error occurred while cloning the repository.")
+    os.exit(1)
+end
+
 -- Check if the directory exists
-if os.execute("test -d " .. target_dir) then
+if run_command("test -d " .. target_dir) then
     print(target_dir .. " already exists.")
     print("Do you want to overwrite it? (yes/no): ")
     local answer = io.read()
-    if answer ~= "yes" then
+    if answer == "yes" then
+        print("Moving temp directory to target directory")
+        run_command("rm -rf " .. target_dir)
+        run_command("mv " .. temp_dir .. target_dir)
+    else
+        run_command("rm -rf " .. temp_dir)
         print("Exiting without overwriting the directory.")
         os.exit(1)
     end
 
     -- Remove the existing directory
-    if not os.execute("rm -rf " .. target_dir) then
+    if not run_command("rm -rf " .. target_dir) then
         print("An error occurred while removing the directory.")
         os.exit(1)
     end
 else
     print(target_dir .. " does not exist. Creating the directory...")
-end
-
--- Clone the repository
-if os.execute("git clone " .. REPO_URL .. " " .. target_dir) then
-    create_tmp_dir()
-    print("Repository cloned successfully into " .. target_dir)
-else
-    print("An error occurred while cloning the repository.")
-    os.exit(1)
 end
