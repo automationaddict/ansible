@@ -167,11 +167,11 @@ if run_command("test -d " .. target_dir) then
     end
 else
     print(target_dir .. " does not exist. Creating the directory...")
-    create_tmp_dir()
 end
 
 -- Clone the repository
-if run_command("git clone " .. REPO_URL .. " " .. target_dir) then
+if os.execute("git clone " .. REPO_URL .. " " .. target_dir) then
+    create_tmp_dir()
     print("Repository cloned successfully into " .. target_dir)
 else
     print("An error occurred while cloning the repository.")
