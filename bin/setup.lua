@@ -151,7 +151,7 @@ print("Clone a git repository")
 local target_dir = os.getenv("HOME") .. "/ansible"
 
 -- Check if the directory exists
-if run_command("test -d " .. target_dir) then
+if os.execute("test -d " .. target_dir) then
     print(target_dir .. " already exists.")
     print("Do you want to overwrite it? (yes/no): ")
     local answer = io.read()
@@ -161,7 +161,7 @@ if run_command("test -d " .. target_dir) then
     end
 
     -- Remove the existing directory
-    if not run_command("rm -rf " .. target_dir) then
+    if not os.execute("rm -rf " .. target_dir) then
         print("An error occurred while removing the directory.")
         os.exit(1)
     end
