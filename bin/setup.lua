@@ -1,18 +1,23 @@
 local REPO_URL = "https://github.com/automationaddict/ansible.git"
 
--- Create the tmp directory
-local tmp_dir = "./tmp" -- Directory path
+local function create_tmp_dir()
+    -- Create the tmp directory
+    local tmp_dir = "./tmp" -- Directory path
 
-print("Check if the directory exists and remove it")
-if os.execute("test -d " .. tmp_dir) then
-    -- Remove the existing directory
-    os.execute("rm -rf " .. tmp_dir)
+    print("Check if the directory exists and remove it")
+    if os.execute("test -d " .. tmp_dir) then
+        -- Remove the existing directory
+        os.execute("rm -rf " .. tmp_dir)
+    end
+
+    print("Create the directory")
+    if os.execute("mkdir -p " .. tmp_dir) then
+        print(tmp_dir .. " directory has been created.")
+    end
 end
 
-print("Create the directory")
-if os.execute("mkdir -p " .. tmp_dir) then
-    print(tmp_dir .. " directory has been created.")
-end
+-- First run create tmp directory
+create_tmp_dir()
 
 -- Function to run a shell command and check its result
 local function run_command(command)
@@ -162,14 +167,7 @@ if run_command("test -d " .. target_dir) then
     end
 else
     print(target_dir .. " does not exist. Creating the directory...")
-end
-
--- Create the directory
-if run_command("mkdir -p " .. target_dir) then
-    print(target_dir .. " has been created.")
-else
-    print("An error occurred while creating the directory.")
-    os.exit(1)
+    create_tmp_dir()
 end
 
 -- Clone the repository
