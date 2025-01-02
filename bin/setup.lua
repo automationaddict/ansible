@@ -15,6 +15,28 @@ local function run_command(command)
     return false
 end
 
+-- Create the tmp directory
+local function create_tmp_directory()
+    local tmp_dir = "./tmp" -- Directory path
+
+    -- Check if the directory exists and remove it
+    if run_command("test -d " .. tmp_dir) then
+        -- Remove the existing directory
+        if not run_command("rm -rf " .. tmp_dir) then
+            print("An error occurred while removing the tmp directory.")
+            os.exit(1)
+        end
+    end
+
+    -- Create the directory
+    if run_command("mkdir -p " .. tmp_dir) then
+        print(tmp_dir .. " directory has been created.")
+    else
+        print("An error occurred while creating the tmp directory.")
+        os.exit(1)
+    end
+end
+
 print("Updating, Upgrading, and Cleaning up the system")
 
 -- Update package list

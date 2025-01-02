@@ -1,4 +1,4 @@
-bin/tmp
+bin/tmp/setup_log.txt
 filters/
 inventory/
 playbooks/
