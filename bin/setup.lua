@@ -167,8 +167,7 @@ if run_command("test -d " .. target_dir) then
     local answer = io.read()
     if answer == "yes" then
         print("Moving temp directory to target directory")
-        run_command("rm -rf " .. target_dir)
-        run_command("mv " .. temp_dir .. target_dir)
+        run_command("mv -f " .. temp_dir .. target_dir)
     else
         run_command("rm -rf " .. temp_dir)
         print("Exiting without overwriting the directory.")
