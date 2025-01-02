@@ -143,7 +143,7 @@ end
 -- Clone the Ansible repository
 print("Clone a git repository")
 
-local target_dir = os.getenv("HOME") .. "/Ansible"
+local target_dir = os.getenv("HOME") .. "/ansible"
 
 -- Check if the directory exists
 if run_command("test -d " .. target_dir) then
