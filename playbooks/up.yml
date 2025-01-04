@@ -1,0 +1,30 @@
+---
+- name: Update package cache and upgrade all packages
+  tags: always
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Update the apt package cache (Debian based)
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      changed_when: false
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Upgrade all packages (Debian based)
+      ansible.builtin.apt:
+        upgrade: yes
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Cleanup package cache (Debian based)
+      ansible.builtin.apt:
+        autoclean: yes
+      changed_when: false
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Cleanup autoremove orphan packages (Debian based)
+      ansible.builtin.apt:
+        autoremove: yes
+        purge: yes
+      when: ansible_facts['os_family'] == 'Debian'

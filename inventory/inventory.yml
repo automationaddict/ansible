@@ -1,0 +1,15 @@
+---
+control:
+  hosts:
+    john-laptop.home.lan:
+server:
+  hosts:
+workstation:
+  hosts:
+    john-desktop.home.lan:
+    john-dev.home.lan:
+home: # meta group
+  children:
+    control:
+    server:
+    workstation:

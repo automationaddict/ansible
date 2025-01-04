@@ -1,0 +1,9 @@
+---
+- name: Display a single Ansible fact
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Print the fact
+      debug:
+        msg: "The fact is {{ ansible_facts['user_id'] }}"

@@ -1,7 +1,6 @@
 bin/tmp/setup_log.txt
-filters/
-inventory/
-playbooks/
-roles/
-ansible.cfg
-play.just
+playbooks/base_install.yml
+playbooks/site.yml
+roles/applications/
+roles/services/
+roles/users/

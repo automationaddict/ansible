@@ -1,0 +1,8 @@
+---
+- name: Verify basic connectivity
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Ping results from all hosts
+      ansible.builtin.ping:
