@@ -6,3 +6,4 @@ roles/applications/master_pdf_editor
 roles/applications/vivaldi
 roles/services/flatpak
 roles/users/
+roles/applications/zed/tasks/main.yml

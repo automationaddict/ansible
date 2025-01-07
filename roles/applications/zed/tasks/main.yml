@@ -21,7 +21,7 @@
 
 - name: Install Zed Editor
   become: true
-  community:general.flatpak:
+  community.general.flatpak:
     name: dev.zed.Zed
     method: system
     state: present
@@ -33,7 +33,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy Zed settings file
   become: true
@@ -42,7 +42,7 @@
     dest: "{{ user_dir }}/.config/zed/settings.json"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0644'
+    mode: "0644"
 
 - name: Copy themes directory
   become: true
@@ -51,7 +51,7 @@
     dest: "{{ user_dir }}/.config/zed"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy Zed keymap file
   become: true
@@ -60,7 +60,7 @@
     dest: "{{ user_dir }}/.config/zed/keymap.json"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0644'
+    mode: "0644"
 
 - name: Get Zed information
   ansible.builtin.shell: >
