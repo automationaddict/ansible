@@ -2,7 +2,11 @@
 # tasks file for template
 - name: Capture user directory
   ansible.builtin.set_fact:
-    user_dir: "{{ ansible_env.HOME }}"
+    usr_dir: "{{ ansible_facts['ansible_env']['HOME'] }}"
+
+- name: Set custom variable for user
+  set_fact:
+    usr: "{{ ansible_facts['user_id'] }}"
 
 - name: Ensure Flatpak is installed
   become: true
@@ -29,37 +33,37 @@
 - name: Create Zed configuration directory
   become: true
   ansible.builtin.file:
-    path: "{{ user_dir }}/.config/zed"
+    path: "{{ usr_dir }}/.config/zed"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ usr }}"
+    group: "{{ usr }}"
     mode: "0755"
 
 - name: Copy Zed settings file
   become: true
   ansible.builtin.copy:
     src: settings.json
-    dest: "{{ user_dir }}/.config/zed/settings.json"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ usr_dir }}/.config/zed/settings.json"
+    owner: "{{ usr }}"
+    group: "{{ usr }}"
     mode: "0644"
 
 - name: Copy themes directory
   become: true
   ansible.builtin.copy:
     src: themes
-    dest: "{{ user_dir }}/.config/zed"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ usr_dir }}/.config/zed"
+    owner: "{{ usr }}"
+    group: "{{ usr }}"
     mode: "0755"
 
 - name: Copy Zed keymap file
   become: true
   ansible.builtin.copy:
     src: keymap.json
-    dest: "{{ user_dir }}/.config/zed/keymap.json"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ usr_dir }}/.config/zed/keymap.json"
+    owner: "{{ usr }}"
+    group: "{{ usr }}"
     mode: "0644"
 
 - name: Get Zed information
