@@ -7,5 +7,5 @@
     # Applications
     - role: zed
     # Services
-    - role: cifs_utils
-    - role: ssh
+    # - role: cifs_utils
+    # - role: ssh
