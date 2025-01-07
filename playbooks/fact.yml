@@ -6,4 +6,5 @@
   tasks:
     - name: Print the fact
       debug:
-        msg: "The fact is {{ ansible_facts['user_id'] }}"
+        # msg: "The fact is {{ ansible_facts['user_id'] }}"
+        msg: "The fact is {{ ansible_user }}"
