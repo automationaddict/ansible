@@ -1,0 +1,20 @@
+---
+# tasks file for template
+- name: Install wget
+  apt:
+    name: wget
+    state: present
+
+- name: Download JetBrains Mono Nerd Font
+  get_url:
+    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/JetBrainsMono.zip
+    dest: /tmp/JetBrainsMono.zip
+
+- name: Extract JetBrains Mono Nerd Font
+  unarchive:
+    src: /tmp/JetBrainsMono.zip
+    dest: /usr/share/fonts
+    remote_src: yes
+
+- name: Update font cache
+  command: fc-cache -fv

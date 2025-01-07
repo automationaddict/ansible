@@ -1,0 +1,14 @@
+---
+# tasks file for template
+- name: Install CIFS utilities
+  become: true
+  block:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+    - name: Install CIFS utilities
+      apt:
+        name: cifs-utils
+        state: present
+  when: cifs_utils_flag and ansible_facts['os_family'] == 'Debian'

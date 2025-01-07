@@ -1,0 +1,11 @@
+---
+# handlers file for template
+- name: Update all packages to the latest version
+  apt:
+    update_cache: true
+    upgrade: dist
+
+- name: Restart SSH server
+  service:
+    name: sshd
+    state: restarted

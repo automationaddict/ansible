@@ -1,0 +1,11 @@
+---
+- name: Install base packages
+  hosts: control
+  become: false
+
+  roles:
+    # Applications
+    - role: zed
+    # Services
+    - role: cifs_utils
+    - role: ssh

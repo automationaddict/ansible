@@ -1,0 +1,70 @@
+---
+# tasks file for template
+- name: Set custom variable for user
+  set_fact:
+    ssh_user_id: "{{ ansible_facts['user_id'] }}"
+
+- name: Configure SSH server
+  become: true
+  block:
+    - name: Install OpenSSH server
+      apt:
+        name: openssh-server
+        state: present
+
+    - name: Ensure SSH service is enabled and started
+      service:
+        name: sshd
+        state: started
+        enabled: yes
+
+    - name: Allow SSH through UFW
+      ufw:
+        rule: allow
+        port: "{{ ansible_port }}"
+        proto: tcp
+
+    - name: Create /etc/issue.net with banner message
+      copy:
+        content: "{{ banner_message }}"
+        dest: /etc/issue.net
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Ensure SSH banner is configured in sshd_config
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^Banner"
+        line: "Banner /etc/issue.net"
+        state: present
+
+    - name: Ensure .ssh directory exists
+      file:
+        path: /home/{{ ssh_user_id }}/.ssh
+        state: directory
+        owner: "{{ ssh_user_id }}"
+        group: "{{ ssh_user_id }}"
+        mode: "0700"
+
+    - name: Push SSH config file to all hosts
+      copy:
+        src: config
+        dest: /home/{{ ssh_user_id }}/.ssh/config
+        owner: "{{ ssh_user_id }}"
+        group: "{{ ssh_user_id }}"
+        mode: "0644"
+
+    - name: Add Ansible SSH key to authorized_keys
+      authorized_key:
+        user: "{{ ssh_user_id }}"
+        state: present
+        key: "{{ ssh_ansible_key }}"
+  when: ssh_config_flag | default(false) and ansible_facts['os_family'] == 'Debian'
+
+- name: Add SSH key to authorized_keys
+  authorized_key:
+    user: "{{ ssh_user_id }}"
+    state: present
+    key: "{{ ssh_public_key }}"
+  when: ssh_public_key_flag | default(false) and ansible_facts['os_family'] == 'Debian'

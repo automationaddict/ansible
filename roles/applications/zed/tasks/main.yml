@@ -1,0 +1,74 @@
+---
+# tasks file for template
+- name: Capture user directory
+  ansible.builtin.set_fact:
+    user_dir: "{{ ansible_env.HOME }}"
+
+- name: Ensure Flatpak is installed
+  become: true
+  ansible.builtin.apt:
+    name: flatpak
+    state: present
+    update_cache: true
+
+- name: Add Flathub repository
+  become: true
+  community.general.flatpak_remote:
+    name: flathub
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    method: system
+    state: present
+
+- name: Install Zed Editor
+  become: true
+  community:general.flatpak:
+    name: dev.zed.Zed
+    method: system
+    state: present
+
+- name: Create Zed configuration directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ user_dir }}/.config/zed"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Copy Zed settings file
+  become: true
+  ansible.builtin.copy:
+    src: settings.json
+    dest: "{{ user_dir }}/.config/zed/settings.json"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+- name: Copy themes directory
+  become: true
+  ansible.builtin.copy:
+    src: themes
+    dest: "{{ user_dir }}/.config/zed"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Copy Zed keymap file
+  become: true
+  ansible.builtin.copy:
+    src: keymap.json
+    dest: "{{ user_dir }}/.config/zed/keymap.json"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+- name: Get Zed information
+  ansible.builtin.shell: >
+    set -o pipefail
+    && flatpak info dev.zed.Zed | grep -i version
+  register: zed_info
+  changed_when: false
+
+- name: Debug Zed information
+  ansible.builtin.debug:
+    msg: "Zed info: {{ zed_info.stdout }}"

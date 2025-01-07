@@ -1,0 +1,18 @@
+# Files specific to app role
+Host john-laptop
+ Hostname john-laptop.home.lan
+ Port 22
+ User johnnelson
+ IdentityFile /home/johnnelson/.ssh/john-laptop
+
+Host john-desktop
+ Hostname john-desktop.home.lan
+ Port 22
+ User johnnelson
+ IdentityFile /home/johnnelson/.ssh/john-desktop
+
+Host john-dev
+ Hostname john-dev.home.lan
+ Port 22
+ User johnnelson
+ IdentityFile /home/johnnelson/.ssh/john-dev

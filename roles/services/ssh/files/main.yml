@@ -1,0 +1,9 @@
+---
+# defaults file for template
+banner_message: |
+  ********************************************************
+
+            Welcome to {{ inventory_hostname }}
+            Unauthorized access is prohibited!
+
+  ********************************************************

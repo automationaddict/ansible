@@ -1,6 +1,8 @@
 bin/tmp/setup_log.txt
-playbooks/base_install.yml
 playbooks/site.yml
-roles/applications/
-roles/services/
+roles/applications/bash
+roles/applications/beyond_compare
+roles/applications/master_pdf_editor
+roles/applications/vivaldi
+roles/services/flatpak
 roles/users/
