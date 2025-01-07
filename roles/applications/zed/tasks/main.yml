@@ -2,7 +2,7 @@
 # tasks file for template
 - name: Capture user directory
   ansible.builtin.set_fact:
-    usr_dir: "{{ ansible_facts['ansible_env']['HOME'] }}"
+    usr_dir: "{{ ansible_facts['env']['HOME'] }}"
 
 - name: Set custom variable for user
   set_fact:
