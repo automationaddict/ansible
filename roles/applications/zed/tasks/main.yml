@@ -1,77 +1,88 @@
 ---
 # tasks file for template
-- name: Capture user directory
-  ansible.builtin.set_fact:
-    usr_dir: "{{ ansible_facts['env']['HOME'] }}"
-
-- name: Set custom variable for user
-  set_fact:
-    usr: "{{ ansible_facts['user_id'] }}"
-
-- name: Ensure Flatpak is installed
-  become: true
-  ansible.builtin.apt:
-    name: flatpak
-    state: present
-    update_cache: true
-
-- name: Add Flathub repository
-  become: true
-  community.general.flatpak_remote:
-    name: flathub
-    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
-    method: system
-    state: present
-
 - name: Install Zed Editor
-  become: true
-  community.general.flatpak:
-    name: dev.zed.Zed
-    method: system
-    state: present
+  block:
+    - name: Capture user directory
+      ansible.builtin.set_fact:
+        usr_dir: "{{ ansible_facts['env']['HOME'] }}"
 
-- name: Create Zed configuration directory
-  become: true
-  ansible.builtin.file:
-    path: "{{ usr_dir }}/.config/zed"
-    state: directory
-    owner: "{{ usr }}"
-    group: "{{ usr }}"
-    mode: "0755"
+    - name: Set custom variable for user
+      set_fact:
+        usr: "{{ ansible_facts['user_id'] }}"
 
-- name: Copy Zed settings file
-  become: true
-  ansible.builtin.copy:
-    src: settings.json
-    dest: "{{ usr_dir }}/.config/zed/settings.json"
-    owner: "{{ usr }}"
-    group: "{{ usr }}"
-    mode: "0644"
+    - name: Ensure Flatpak is installed
+      become: true
+      ansible.builtin.apt:
+        name: flatpak
+        state: present
+        update_cache: true
 
-- name: Copy themes directory
-  become: true
-  ansible.builtin.copy:
-    src: themes
-    dest: "{{ usr_dir }}/.config/zed"
-    owner: "{{ usr }}"
-    group: "{{ usr }}"
-    mode: "0755"
+    - name: Add Flathub repository
+      become: true
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: system
+        state: present
 
-- name: Copy Zed keymap file
-  become: true
-  ansible.builtin.copy:
-    src: keymap.json
-    dest: "{{ usr_dir }}/.config/zed/keymap.json"
-    owner: "{{ usr }}"
-    group: "{{ usr }}"
-    mode: "0644"
+    - name: Install Zed Editor
+      become: true
+      community.general.flatpak:
+        name: dev.zed.Zed
+        method: system
+        state: present
 
-- name: Get Zed information
-  ansible.builtin.shell: >
-    bash -o pipefail -c 'flatpak info dev.zed.Zed | grep -i version'
-  register: zed_info
-  changed_when: false
+    - name: Create Zed configuration directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ usr_dir }}/.config/zed"
+        state: directory
+        owner: "{{ usr }}"
+        group: "{{ usr }}"
+        mode: "0755"
 
-- name: Debug Zed information
-  ansible.builtin.debug:
-    msg: "Zed info: {{ zed_info.stdout }}"
+    - name: Copy Zed settings file
+      become: true
+      ansible.builtin.copy:
+        src: settings.json
+        dest: "{{ usr_dir }}/.config/zed/settings.json"
+        owner: "{{ usr }}"
+        group: "{{ usr }}"
+        mode: "0644"
+
+    - name: Copy themes directory
+      become: true
+      ansible.builtin.copy:
+        src: themes
+        dest: "{{ usr_dir }}/.config/zed"
+        owner: "{{ usr }}"
+        group: "{{ usr }}"
+        mode: "0755"
+
+    - name: Copy Zed keymap file
+      become: true
+      ansible.builtin.copy:
+        src: keymap.json
+        dest: "{{ usr_dir }}/.config/zed/keymap.json"
+        owner: "{{ usr }}"
+        group: "{{ usr }}"
+        mode: "0644"
+
+    - name: Get Zed information
+      ansible.builtin.shell: >
+        bash -o pipefail -c 'flatpak info dev.zed.Zed | grep -i version'
+      register: zed_info
+      changed_when: false
+
+    - name: Update Zed editor from Flathub
+      become: true
+      community.general.flatpak:
+        name: dev.zed.Zed
+        method: system
+        state: latest
+
+    - name: Debug Zed information
+      ansible.builtin.debug:
+        msg: "Zed info: {{ zed_info.stdout }}"
+
+  when: ansible_facts['os_family'] == 'Debian'

@@ -1,6 +1,6 @@
 ---
 - name: Install base packages
-  hosts: control
+  hosts: home
   become: false
 
   roles:

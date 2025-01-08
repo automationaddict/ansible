@@ -1,20 +1,57 @@
 ---
 # tasks file for template
-- name: Install wget
-  apt:
-    name: wget
-    state: present
+- name: Install JetBrainsMono Nerd Font
+  block:
+    - name: Check if JetBrains Mono Nerd Font is already installed
+      ansible.builtin.stat:
+        path: ~/.fonts/JetBrainsMono
+      register: font_installed
 
-- name: Download JetBrains Mono Nerd Font
-  get_url:
-    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/JetBrainsMono.zip
-    dest: /tmp/JetBrainsMono.zip
+    - name: Create a temporary directory for the download
+      become: true
+      ansible.builtin.file:
+        path: /tmp/nerdfonts
+        state: directory
+        mode: "0755"
+      when: not font_installed.stat.exists
 
-- name: Extract JetBrains Mono Nerd Font
-  unarchive:
-    src: /tmp/JetBrainsMono.zip
-    dest: /usr/share/fonts
-    remote_src: yes
+    - name: Install wget
+      become: true
+      ansible.builtin.apt:
+        name: wget
+        state: present
+      when: not font_installed.stat.exists
 
-- name: Update font cache
-  command: fc-cache -fv
+    - name: Download JetBrains Mono Nerd Font
+      become: true
+      ansible.builtin.get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/JetBrainsMono.zip
+        dest: /tmp/nerdfonts/JetBrainsMono.zip
+        mode: "0644"
+      when: not font_installed.stat.exists
+
+    - name: Ensure destination directory exists
+      become: false
+      ansible.builtin.file:
+        path: ~/.fonts/JetBrainsMono
+        state: directory
+        mode: "0755"
+      when: not font_installed.stat.exists
+
+    - name: Extract JetBrains Mono Nerd Font
+      become: false
+      ansible.builtin.unarchive:
+        src: /tmp/nerdfonts/JetBrainsMono.zip
+        dest: ~/.fonts/JetBrainsMono
+        remote_src: true
+      when: not font_installed.stat.exists
+      notify: Update font cache
+
+    - name: Clean up temporary directory
+      become: true
+      ansible.builtin.file:
+        path: /tmp/nerdfonts
+        state: absent
+      when: not font_installed.stat.exists
+
+  when: ansible_facts['os_family'] == 'Debian'
