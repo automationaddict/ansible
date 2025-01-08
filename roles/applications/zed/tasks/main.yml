@@ -67,7 +67,8 @@
     mode: "0644"
 
 - name: Get Zed information
-  ansible.builtin.shell: flatpak info dev.zed.Zed | grep -i version
+  ansible.builtin.shell: >
+    bash -o pipefail -c 'flatpak info dev.zed.Zed | grep -i version'
   register: zed_info
   changed_when: false
 
