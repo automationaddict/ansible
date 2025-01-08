@@ -5,7 +5,6 @@
 
   roles:
     # Applications
-    - role: fonts
     - role: zed
     # Services
     # - role: cifs_utils
