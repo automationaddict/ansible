@@ -27,4 +27,15 @@
       ansible.builtin.apt:
         autoremove: yes
         purge: yes
+
+    - name: Update Flatpak repository information
+      command: flatpak update --appstream
+      changed_when: false
+
+    - name: Update all Flatpak packages
+      command: flatpak update -y
+
+    - name: Clean up unused runtimes
+      command: flatpak uninstall --unused -y
+
       when: ansible_facts['os_family'] == 'Debian'
