@@ -35,7 +35,7 @@
     - name: Create Zed configuration directory
       become: true
       ansible.builtin.file:
-        path: "{{ usr_dir }}/.config/zed"
+        path: "{{ usr_dir }}/.var/app/dev.zed.Zed/config/zed"
         state: directory
         owner: "{{ usr }}"
         group: "{{ usr }}"
@@ -45,7 +45,7 @@
       become: true
       ansible.builtin.copy:
         src: settings.json
-        dest: "{{ usr_dir }}/.config/zed/settings.json"
+        dest: "{{ usr_dir }}/.var/app/dev.zed.Zed/config/zed/settings.json"
         owner: "{{ usr }}"
         group: "{{ usr }}"
         mode: "0644"
@@ -54,7 +54,7 @@
       become: true
       ansible.builtin.copy:
         src: themes
-        dest: "{{ usr_dir }}/.config/zed"
+        dest: "{{ usr_dir }}/.var/app/dev.zed.Zed/config/zed"
         owner: "{{ usr }}"
         group: "{{ usr }}"
         mode: "0755"
@@ -63,7 +63,7 @@
       become: true
       ansible.builtin.copy:
         src: keymap.json
-        dest: "{{ usr_dir }}/.config/zed/keymap.json"
+        dest: "{{ usr_dir }}/.var/app/dev.zed.Zed/config/zed/keymap.json"
         owner: "{{ usr }}"
         group: "{{ usr }}"
         mode: "0644"

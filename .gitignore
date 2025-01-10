@@ -1,9 +1,9 @@
 bin/tmp/setup_log.txt
 playbooks/site.yml
-roles/applications/bash
 roles/applications/beyond_compare
 roles/applications/master_pdf_editor
 roles/applications/vivaldi
 roles/services/flatpak
+roles/applications/bash
 roles/users/
 roles/applications/zed/tasks/main.yml
