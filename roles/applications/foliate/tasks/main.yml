@@ -1,0 +1,52 @@
+---
+# tasks file for template
+- name: Install Foliate E-book reader
+  block:
+    - name: Capture user directory
+      ansible.builtin.set_fact:
+        usr_dir: "{{ ansible_facts['env']['HOME'] }}"
+
+    - name: Set custom variable for user
+      set_fact:
+        usr: "{{ ansible_facts['user_id'] }}"
+
+    - name: Ensure Flatpak is installed
+      become: true
+      ansible.builtin.apt:
+        name: flatpak
+        state: present
+        update_cache: true
+
+    - name: Add Flathub repository
+      become: true
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: system
+        state: present
+
+    - name: Install Foliate
+      become: true
+      community.general.flatpak:
+        name: com.github.johnfactotum.Foliate
+        method: system
+        state: present
+
+    - name: Get Foliate information
+      ansible.builtin.shell: >
+        bash -o pipefail -c 'flatpak info com.github.johnfactotum.Foliate | grep -i version'
+      register: foliate_info
+      changed_when: false
+
+    - name: Update Foliate from Flathub
+      become: true
+      community.general.flatpak:
+        name: com.github.johnfactotum.Foliate
+        method: system
+        state: latest
+
+    - name: Debug Foliate information
+      ansible.builtin.debug:
+        msg: "Foliate info: {{ foliate_info.stdout }}"
+
+  when: ansible_facts['os_family'] == 'Debian'

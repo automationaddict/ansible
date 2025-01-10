@@ -1,0 +1,21 @@
+---
+# tasks file for template
+- name: Install Gnome Screenshot
+  become: true
+  block:
+    - name: Ensure GNOME Screenshot is installed
+      ansible.builtin.apt:
+        name: gnome-screenshot
+        state: present
+
+    - name: Get Gnome Screenshot version
+      ansible.builtin.shell: >
+        bash -o pipefail -c 'gnome-screenshot --version'
+      register: foliate_info
+      changed_when: false
+
+    - name: Debug Gnome Screenshot information
+      ansible.builtin.debug:
+        msg: "Gnome Screenshot info: {{ foliate_info.stdout }}"
+
+  when: ansible_facts['os_family'] == 'Debian'

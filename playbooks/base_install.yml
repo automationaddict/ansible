@@ -5,6 +5,8 @@
 
   roles:
     # Applications
+    - role: foliate
+    - role: screenshot
     - role: zed
     # Services
     # - role: cifs_utils
