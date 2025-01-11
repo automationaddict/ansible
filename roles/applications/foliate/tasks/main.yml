@@ -10,21 +10,6 @@
       set_fact:
         usr: "{{ ansible_facts['user_id'] }}"
 
-    - name: Ensure Flatpak is installed
-      become: true
-      ansible.builtin.apt:
-        name: flatpak
-        state: present
-        update_cache: true
-
-    - name: Add Flathub repository
-      become: true
-      community.general.flatpak_remote:
-        name: flathub
-        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
-        method: system
-        state: present
-
     - name: Install Foliate
       become: true
       community.general.flatpak:

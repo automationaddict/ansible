@@ -1,0 +1,77 @@
+---
+- name: Update package cache and upgrade all packages
+  hosts: chosen_group
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Update the apt package cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      changed_when: false
+      register: apt_update
+
+    - name: Show update result
+      debug:
+        var: apt_update.results
+      when: apt_update is changed
+
+    - name: Upgrade all packages to the latest version
+      ansible.builtin.apt:
+        upgrade: full
+      register: apt_upgrade
+
+    - name: Show upgrade result
+      debug:
+        var: apt_upgrade.results
+      when: apt_upgrade is changed
+
+    - name: Cleanup unused package files
+      ansible.builtin.apt:
+        clean: true
+      changed_when: false
+
+    - name: Autoremove unnecessary packages
+      ansible.builtin.apt:
+        autoremove: true
+        purge: true
+      register: apt_autoremove
+
+    - name: Show autoremove result
+      debug:
+        var: apt_autoremove.results
+      when: apt_autoremove is changed
+
+    - name: Check for errors in APT operations
+      assert:
+        that:
+          - apt_update is success
+          - apt_upgrade is success
+          - apt_autoremove is success
+        fail_msg: "An error occurred during APT operations"
+        success_msg: "APT operations completed successfully"
+
+    - name: Update Flatpak repository information
+      ansible.builtin.command: flatpak update --appstream
+      register: flatpak_repo_update
+      changed_when: "'Updated appstream metadata' in flatpak_repo_update.stdout"
+
+    - name: Update all Flatpak packages
+      ansible.builtin.command: flatpak update -y
+      register: flatpak_package_update
+      changed_when: "'Update complete.' in flatpak_package_update.stdout"
+
+    - name: Cleanup unused Flatpak runtimes
+      ansible.builtin.command: flatpak uninstall --unused -y
+      register: flatpak_unused_cleanup
+      changed_when: "'Uninstalled' in flatpak_unused_cleanup.stdout"
+
+    - name: Check for errors in Flatpak operations
+      assert:
+        that:
+          - flatpak_repo_update.rc == 0
+          - flatpak_package_update.rc == 0
+          - flatpak_unused_cleanup.rc == 0
+        fail_msg: "An error occurred during Flatpak operations"
+        success_msg: "Flatpak operations completed successfully"

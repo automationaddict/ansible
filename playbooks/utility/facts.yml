@@ -1,0 +1,23 @@
+---
+- name: Gather and Display All Facts in YAML Format
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Display all gathered facts
+      ansible.builtin.debug:
+        var: ansible_facts
+        verbosity: 1 # This will only show when -v is used
+      register: facts_output
+
+    - name: Save facts to a YAML file one level above inventory directory
+      ansible.builtin.copy:
+        content: "{{ ansible_facts | to_nice_yaml }}"
+        dest: "{{ inventory_dir | dirname }}/facts/{{ inventory_hostname }}.yml"
+        mode: '0644'
+      delegate_to: localhost
+      run_once: false
+
+    - name: Show path to saved facts
+      ansible.builtin.debug:
+        msg: "Facts for {{ inventory_hostname }} have been saved to {{ inventory_dir | dirname }}/facts_{{ inventory_hostname }}.yml"

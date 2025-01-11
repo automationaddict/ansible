@@ -1,0 +1,47 @@
+---
+- name: Select a Group
+  hosts: localhost
+  gather_facts: false
+  vars:
+    group_list: "{{ groups.keys() | list }}"
+  vars_prompt:
+    - name: "group_index"
+      prompt: |
+        Please select the target group by number:
+        {% for i in range(group_list | length) %}
+        {{ i }}: {{ group_list[i] }}
+        {% endfor %}
+      private: false
+  tasks:
+    - name: Resolve selected group
+      set_fact:
+        group: "{{ group_list[group_index | int] }}"
+      no_log: true
+
+    - name: Add the chosen group to a new group
+      add_host:
+        name: "{{ item }}"
+        groups: chosen_group
+      loop: "{{ groups[group] }}"
+
+- name: Gather facts for chosen group
+  hosts: chosen_group
+  gather_facts: true
+
+- name: Run update and upgrade tasks
+  import_playbook: utility/up.yml
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install base packages
+  hosts: chosen_group
+  gather_facts: false
+  become: false
+
+  roles:
+    # Applications
+    - role: foliate
+    - role: screenshot
+    - role: zed
+    # Services
+    # - role: cifs_utils
+    # - role: ssh
