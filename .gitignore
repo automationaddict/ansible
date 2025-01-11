@@ -8,4 +8,4 @@ roles/services/flatpak
 roles/applications/bash
 roles/users/
 roles/applications/zed/tasks/main.yml
-facts
+facts/*.yml
