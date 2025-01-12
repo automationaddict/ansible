@@ -44,4 +44,4 @@
     - role: zed
     # Services
     # - role: cifs_utils
-    # - role: ssh
+    - role: ssh

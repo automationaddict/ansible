@@ -20,9 +20,6 @@ ssh_public_key: !vault |
 # Configurations to install
 # bash_config_flag: true
 # flatpack_flag: false
-# ssh_config_flag: true
-# ssh_public_key_flag: true
-
 # Packages to install
 # beyond_compare_flag: true
 # master_pdf_editor_flag: true

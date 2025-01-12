@@ -1,31 +1,39 @@
 ---
 # tasks file for template
 - name: Set custom variable for user
-  set_fact:
+  ansible.builtin.set_fact:
     ssh_user_id: "{{ ansible_facts['user_id'] }}"
 
 - name: Configure SSH server
   become: true
   block:
     - name: Install OpenSSH server
-      apt:
+      ansible.builtin.apt:
         name: openssh-server
         state: present
 
-    - name: Ensure SSH service is enabled and started
-      service:
-        name: sshd
+    - name: Ensure SSH service is enabled and running
+      ansible.builtin.service:
+        name: ssh
         state: started
-        enabled: yes
+        enabled: true
 
-    - name: Allow SSH through UFW
-      ufw:
-        rule: allow
-        port: "{{ ansible_port }}"
-        proto: tcp
+    - name: Allow SSH through UFW (if UFW is installed)
+      block:
+        - name: Check if UFW is installed
+          ansible.builtin.stat:
+            path: /usr/sbin/ufw
+          register: ufw_installed
+
+        - name: Allow SSH through UFW
+          community.general.ufw:
+            rule: allow
+            port: 22
+            proto: tcp
+          when: ufw_installed.stat.exists
 
     - name: Create /etc/issue.net with banner message
-      copy:
+      ansible.builtin.copy:
         content: "{{ banner_message }}"
         dest: /etc/issue.net
         owner: root
@@ -33,14 +41,14 @@
         mode: "0644"
 
     - name: Ensure SSH banner is configured in sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: "^Banner"
         line: "Banner /etc/issue.net"
         state: present
 
     - name: Ensure .ssh directory exists
-      file:
+      ansible.builtin.file:
         path: /home/{{ ssh_user_id }}/.ssh
         state: directory
         owner: "{{ ssh_user_id }}"
@@ -48,23 +56,24 @@
         mode: "0700"
 
     - name: Push SSH config file to all hosts
-      copy:
+      ansible.builtin.copy:
         src: config
         dest: /home/{{ ssh_user_id }}/.ssh/config
         owner: "{{ ssh_user_id }}"
         group: "{{ ssh_user_id }}"
         mode: "0644"
+  when: ansible_facts['os_family'] == 'Debian'
 
-    - name: Add Ansible SSH key to authorized_keys
-      authorized_key:
-        user: "{{ ssh_user_id }}"
-        state: present
-        key: "{{ ssh_ansible_key }}"
-  when: ssh_config_flag | default(false) and ansible_facts['os_family'] == 'Debian'
+- name: Add Ansible SSH key to authorized_keys
+  ansible.builtin.authorized_key:
+    user: "{{ ssh_user_id }}"
+    state: present
+    key: "{{ ssh_ansible_key }}"
+  when: inventory_hostname not in groups['control'] and ansible_facts['os_family'] == 'Debian' # Dont add the key to the control host
 
 - name: Add SSH key to authorized_keys
-  authorized_key:
+  ansible.builtin.authorized_key:
     user: "{{ ssh_user_id }}"
     state: present
     key: "{{ ssh_public_key }}"
-  when: ssh_public_key_flag | default(false) and ansible_facts['os_family'] == 'Debian'
+  when: inventory_hostname not in groups['control'] and ansible_facts['os_family'] == 'Debian' # Dont add the key to the control host
