@@ -1,0 +1,56 @@
+---
+# tasks file for template
+- name: Install Zen Browser
+  block:
+    - name: Capture user directory from ansible facts
+      ansible.builtin.set_fact:
+        usr_dir: "{{ ansible_facts['user_dir'] }}"
+
+    - name: Capture user name from ansible facts
+      ansible.builtin.set_fact:
+        usr: "{{ ansible_facts['user_id'] }}"
+
+    - name: Ensure Flatpak is installed with apt and update cache
+      become: true
+      ansible.builtin.apt:
+        name: flatpak
+        state: present
+        update_cache: true
+
+    - name: Add Flathub repository
+      become: true
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+        method: system
+        state: present
+
+    - name: Install Zen Browser from Flathub
+      become: true
+      community.general.flatpak:
+        name: io.github.zen_browser.zen
+        remote: flathub
+        method: system
+        state: present
+      register: zen_browser_installation
+      ignore_errors: true
+
+    - name: Verify Zen Browser installation
+      ansible.builtin.command:
+        cmd: bash -c 'set -o pipefail && flatpak run io.github.zen_browser.zen --version'
+      register: zen_browser_version
+      ignore_errors: true
+
+    - name: Fail if Zen Browser installation is not successful
+      ansible.builtin.fail:
+        msg: "Zen Browser installation failed."
+      when: zen_browser_version.rc != 0
+
+    - name: Update Zen Browser from Flathub
+      community.general.flatpak:
+        name: io.github.zen_browser.zen
+        state: latest
+        remote: flathub
+        method: system
+      become: true
+  when: ansible_facts['os_family'] == 'Debian'

@@ -1,13 +1,14 @@
 ---
 # tasks file for template
 - name: Install Zed Editor
+  when: ansible_facts['os_family'] == 'Debian'
   block:
     - name: Capture user directory
       ansible.builtin.set_fact:
-        usr_dir: "{{ ansible_facts['env']['HOME'] }}"
+        usr_dir: "{{ ansible_facts['user_dir'] }}"
 
     - name: Set custom variable for user
-      set_fact:
+      ansible.builtin.set_fact:
         usr: "{{ ansible_facts['user_id'] }}"
 
     - name: Ensure Flatpak is installed
@@ -68,21 +69,9 @@
         group: "{{ usr }}"
         mode: "0644"
 
-    - name: Get Zed information
-      ansible.builtin.shell: >
-        bash -o pipefail -c 'flatpak info dev.zed.Zed | grep -i version'
-      register: zed_info
-      changed_when: false
-
     - name: Update Zed editor from Flathub
       become: true
       community.general.flatpak:
         name: dev.zed.Zed
         method: system
         state: latest
-
-    - name: Debug Zed information
-      ansible.builtin.debug:
-        msg: "Zed info: {{ zed_info.stdout }}"
-
-  when: ansible_facts['os_family'] == 'Debian'

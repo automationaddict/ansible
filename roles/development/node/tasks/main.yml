@@ -1,0 +1,30 @@
+---
+# tasks file for template
+- name: Install Node.js and npm
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Ensure Node.js and npm repository dependencies are installed
+      become: true
+      ansible.builtin.apt:
+        name:
+          - gnupg
+        state: present
+
+    - name: Download Node.js setup script
+      become: true
+      ansible.builtin.get_url:
+        url: https://deb.nodesource.com/setup_current.x
+        dest: /tmp/setup_current.x
+        mode: "0755"
+
+    - name: Execute Node.js setup script
+      become: true
+      ansible.builtin.command:
+        cmd: bash /tmp/setup_current.x
+        creates: /etc/apt/sources.list.d/nodesource.list
+
+    - name: Install Node.js and npm
+      become: true
+      ansible.builtin.apt:
+        name: nodejs
+        state: present

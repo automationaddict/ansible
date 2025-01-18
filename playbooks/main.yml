@@ -40,8 +40,14 @@
   roles:
     # Applications
     - role: foliate
+    - role: ghostty
+    - role: helix
     - role: screenshot
     - role: zed
+    # - role: zen
+    # Development
+    - role: language-servers
+    - role: node
     # Services
-    # - role: cifs_utils
+    - role: cifs
     - role: ssh

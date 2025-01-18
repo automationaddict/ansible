@@ -1,0 +1,17 @@
+---
+# tasks file for template
+- name: Ensure CIFS utilities are installed
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+  block:
+    - name: Install CIFS utilities
+      ansible.builtin.apt:
+        name: cifs-utils
+        state: present
+
+    - name: Verify CIFS utilities installation
+      ansible.builtin.command:
+        cmd: dpkg-query -W -f='${Status}' cifs-utils | grep "install ok installed"
+      register: cifs_check
+      failed_when: cifs_check.stdout.find("install ok installed") == -1
+      changed_when: false

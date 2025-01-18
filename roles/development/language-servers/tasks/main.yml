@@ -1,0 +1,65 @@
+---
+# tasks file for template
+- name: Install Ansible Language Server
+  when: ansible_os_family == "Debian"
+
+  block:
+    - name: Install Ansible Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g @ansible/ansible-language-server"
+        creates: /usr/lib/node_modules/@ansible/ansible-language-server
+
+    - name: Install Bash Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g bash-language-server"
+        creates: /usr/lib/node_modules/bash-language-server
+
+    - name: Install CSS Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g vscode-langservers-extracted"
+        creates: /usr/lib/node_modules/vscode-langservers-extracted
+
+    - name: Install Docker Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g dockerfile-language-server-nodejs"
+        creates: /usr/lib/node_modules/dockerfile-language-server-nodejs
+
+    - name: Install Docker Compose Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g @microsoft/compose-language-service"
+        creates: /usr/lib/node_modules/@microsoft/compose-language-service
+
+    # Add Go language server here: https://github.com/helix-editor/helix/wiki/Language-Server-Configurations
+
+    - name: Install HTML Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g vscode-langservers-extracted"
+        creates: /usr/lib/node_modules/vscode-langservers-extracted
+
+    # Add Lua language server here
+    # Add Marksman language server here
+    # Add pylsp language server here
+    # Add Rust language server here
+    # Add Ruby language server here
+
+    - name: Install TailwindCSS Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g @tailwindcss/language-server"
+        creates: /usr/lib/node_modules/@tailwindcss/language-server
+
+    # Add TOML language server here
+
+    - name: Install YAML Language Server globally
+      become: true
+      ansible.builtin.command:
+        cmd: "npm install -g yaml-language-server@next"
+        creates: /usr/lib/node_modules/yaml-language-server
+
+    # Add Zig language server here

@@ -1,0 +1,58 @@
+---
+# tasks file for template
+- name: Install Helix Editor
+  when: ansible_facts['os_family'] == 'Debian'
+  block:
+    - name: Capture user directory
+      ansible.builtin.set_fact:
+        usr_dir: "{{ ansible_facts['user_dir'] }}"
+
+    - name: Set custom variable for user
+      ansible.builtin.set_fact:
+        usr: "helix_user_{{ ansible_facts['user_id'] }}"
+
+    - name: Add Helix PPA repository
+      become: true
+      ansible.builtin.apt_repository:
+        repo: "ppa:maveonair/helix-editor"
+        state: present
+
+    - name: Update APT cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Helix Editor from PPA
+      become: true
+      ansible.builtin.apt:
+        name: helix
+        state: present
+
+    - name: Ensure Helix configuration directory exists
+      ansible.builtin.file:
+        path: "{{ usr_dir }}/.config/helix"
+        state: directory
+        owner: "{{ ansible_facts['user_id'] }}"
+        group: "{{ ansible_facts['user_id'] }}"
+        mode: "0755"
+      become: true
+
+    - name: Copy default config.toml to user configuration directory
+      become: true
+      ansible.builtin.copy:
+        src: "./files/config.toml"
+        dest: "{{ usr_dir }}/.config/helix/config.toml"
+        owner: "{{ ansible_facts['user_id'] }}"
+        group: "{{ ansible_facts['user_id'] }}"
+        mode: "0644"
+      changed_when: false
+
+    - name: Copy themes directory to user configuration directory
+      become: true
+      ansible.builtin.copy:
+        src: "./files/themes"
+        dest: "{{ usr_dir }}/.config/helix/themes"
+        owner: "{{ ansible_facts['user_id'] }}"
+        group: "{{ ansible_facts['user_id'] }}"
+        mode: "0755"
+        remote_src: false

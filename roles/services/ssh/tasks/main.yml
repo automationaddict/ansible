@@ -6,6 +6,7 @@
 
 - name: Configure SSH server
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
   block:
     - name: Install OpenSSH server
       ansible.builtin.apt:
@@ -17,20 +18,6 @@
         name: ssh
         state: started
         enabled: true
-
-    - name: Allow SSH through UFW (if UFW is installed)
-      block:
-        - name: Check if UFW is installed
-          ansible.builtin.stat:
-            path: /usr/sbin/ufw
-          register: ufw_installed
-
-        - name: Allow SSH through UFW
-          community.general.ufw:
-            rule: allow
-            port: 22
-            proto: tcp
-          when: ufw_installed.stat.exists
 
     - name: Create /etc/issue.net with banner message
       ansible.builtin.copy:
@@ -62,18 +49,17 @@
         owner: "{{ ssh_user_id }}"
         group: "{{ ssh_user_id }}"
         mode: "0644"
-  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Add Ansible SSH key to authorized_keys
+  when: inventory_hostname not in groups['control'] and ansible_facts['os_family'] == 'Debian' # Dont add the key to the control host
   ansible.builtin.authorized_key:
     user: "{{ ssh_user_id }}"
     state: present
     key: "{{ ssh_ansible_key }}"
-  when: inventory_hostname not in groups['control'] and ansible_facts['os_family'] == 'Debian' # Dont add the key to the control host
 
 - name: Add SSH key to authorized_keys
+  when: inventory_hostname not in groups['control'] and ansible_facts['os_family'] == 'Debian' # Dont add the key to the control host
   ansible.builtin.authorized_key:
     user: "{{ ssh_user_id }}"
     state: present
     key: "{{ ssh_public_key }}"
-  when: inventory_hostname not in groups['control'] and ansible_facts['os_family'] == 'Debian' # Dont add the key to the control host

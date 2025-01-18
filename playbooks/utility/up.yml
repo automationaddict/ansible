@@ -13,7 +13,7 @@
       register: apt_update
 
     - name: Show update result
-      debug:
+      ansible.builtin.debug:
         var: apt_update.results
       when: apt_update is changed
 
@@ -23,7 +23,7 @@
       register: apt_upgrade
 
     - name: Show upgrade result
-      debug:
+      ansible.builtin.debug:
         var: apt_upgrade.results
       when: apt_upgrade is changed
 
@@ -39,12 +39,12 @@
       register: apt_autoremove
 
     - name: Show autoremove result
-      debug:
+      ansible.builtin.debug:
         var: apt_autoremove.results
       when: apt_autoremove is changed
 
     - name: Check for errors in APT operations
-      assert:
+      ansible.builtin.assert:
         that:
           - apt_update is success
           - apt_upgrade is success
@@ -68,7 +68,7 @@
       changed_when: "'Uninstalled' in flatpak_unused_cleanup.stdout"
 
     - name: Check for errors in Flatpak operations
-      assert:
+      ansible.builtin.assert:
         that:
           - flatpak_repo_update.rc == 0
           - flatpak_package_update.rc == 0

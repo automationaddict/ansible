@@ -1,0 +1,37 @@
+# Helix Editor Configuration
+
+# Set the default theme for the editor
+theme = "catppuccin_mocha"
+
+[editor]
+line-number = "relative"
+mouse = false
+true-color = true
+rulers = [80, 120]
+bufferline = "multiple"
+color-modes = true
+popup-border = "all"
+#end-of-line-diagnostics = "hint"
+
+[editor.cursor-shape]
+normal = "block"
+insert = "bar"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.indent-guides]
+render = true
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+
+[editor.soft-wrap]
+enable = true
+max-wrap = 10
+
+# [editor.inline-diagnostics]
+# cursor-line = "hint"
+# other-line = "hint"
